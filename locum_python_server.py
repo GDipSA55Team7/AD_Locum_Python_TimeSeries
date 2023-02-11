@@ -92,25 +92,16 @@ def main():
 
 # run the server
 if __name__ == '__main__':
-    counter = 0
-    while counter < 10:
-        tz_Singapore = dt.timezone(dt.timedelta(hours=8))
-        cnx, cursor = get_MySQL_database_Connector()
-        seed_query = "SELECT COUNT(ADR.date) FROM Average_Daily_Rate ADR" 
-        seed_result_dataFrame = pd.read_sql(seed_query, cnx)
-        print("Overhere lah deh!!!")
-        print(type(seed_result_dataFrame.iloc[0,0]))
-        if(seed_result_dataFrame.iloc[0,0] == 0):
-            print("True It is 0")
-            start_date = date.today() - dt.timedelta(days=1)
-            start_date = start_date.strftime('%Y-%m-%d')
-            seed_sql = ("INSERT INTO Average_Daily_Rate (date) VALUES (%s)")
-            val = (start_date,)
-            cursor.execute(seed_sql, val)
-            cnx.commit()
-        else:
-            print("False It it is not 0")
-        main()
-        counter += 1
-
-
+    tz_Singapore = dt.timezone(dt.timedelta(hours=8))
+    cnx, cursor = get_MySQL_database_Connector()
+    seed_query = "SELECT COUNT(ADR.date) FROM Average_Daily_Rate ADR" 
+    seed_result_dataFrame = pd.read_sql(seed_query, cnx)
+    if(seed_result_dataFrame.iloc[0,0] == 0):
+        print("True It is 0")
+        start_date = date.today() - dt.timedelta(days=1)
+        start_date = start_date.strftime('%Y-%m-%d')
+        seed_sql = ("INSERT INTO Average_Daily_Rate (date) VALUES (%s)")
+        val = (start_date,)
+        cursor.execute(seed_sql, val)
+        cnx.commit()
+    main()
